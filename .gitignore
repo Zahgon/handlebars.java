@@ -1,28 +1,16 @@
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
-target
-.classpath
-.project
-.settings
-bin
-dependency-reduced-pom.xml
+# Go build output #
+/handlebars-cli
+*.test
+*.out
+coverage.txt
 
 # OSX
 *.DS_Store
 
-# IntelliJ IDE Project Files #
+# IntelliJ IDE and VS Code project files #
 *.iml
 *.idea
-
-*.versionsBackup
-pom.xml.versionsBackup
-
-jacoco.exec
+.vscode
 
 out
 tmp
-tmp/spotless

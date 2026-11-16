@@ -16,24 +16,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jre: [17]
+        go: [ '1.23.x' ]
         os: [ ubuntu-latest, windows-latest, macOS-latest ]
         include:
-          - jre: 21
+          - go: 'stable'
             os: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Mustache Specs
-        run: |
-          git submodule update --init --recursive
-      - name: Set up JDK ${{ matrix.java_version }}
-        uses: actions/setup-java@v5
+      - name: Set up Go ${{ matrix.go }}
+        uses: actions/setup-go@v6
         with:
-          java-version: ${{ matrix.jre }}
-          distribution: 'temurin'
-      - name: Install
-        run: mvn clean install -DskipTests --batch-mode --no-transfer-progress
-      - name: Build
-        run: mvn clean package --batch-mode --no-transfer-progress
+          go-version: ${{ matrix.go }}
+      - name: Format
+        if: matrix.os == 'ubuntu-latest'
+        run: test -z "$(gofmt -l .)" || (gofmt -l . && exit 1)
+      - name: Vet
+        run: go vet ./...
+      - name: Test
+        run: go test ./...
+      - name: Build the command
+        run: go build -o handlebars-cli ./cmd/handlebars
